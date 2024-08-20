@@ -29,3 +29,99 @@ textarea {
 p {
     white-space: pre-line;
 }
+
+#body_id {
+    background-image: url("imgs/sky_star.jpg");
+    background-size: cover; /* This will scale the background image to cover the entire background */
+    background-repeat: no-repeat; /* Prevent the background image from repeating */
+
+}
+
+#body_id::before {
+    content: '';
+    position: absolute;
+    top: 25%;
+    left: 33%; 
+    height: 50%;
+    width : 35%;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.7); /* White mask with 70% opacity */
+    z-index: -1; /* Ensure the mask is above the background image */
+}
+
+
+#_div {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-direction: column;
+    height: 100vh; /* Set the height of the container to full viewport height */
+    z-index: 1;
+}
+
+/* center the block */
+#btn{
+    display:block;
+    margin: 0 auto;
+}
+
+#email_input, #password_input {
+    width: 35vh;
+    /* height: 20vh; */
+
+}
+
+@media (max-width : 800px) {
+    #welcome_msg {
+        font-size: 15px;
+    }
+}
+
+
+@media (min-width: 801px) {
+    #welcome_msg {
+        font-size: 22px;
+    }
+}
+
+@media (min-width: 1100px) {
+    #welcome_msg {
+    font-size: 25px;
+    }
+}
+
+#inbox_body{
+    display: flex;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    width: 150px;
+    background-color: #f4f4f4;
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh; /* Full height */
+}
+
+.sidebar button, .sidebar a{
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    background-color: #E1F5FE;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    text-align: center;
+}
+
+.sidebar button:hover {
+    background-color: #e0e0e0;
+}
+
+.content {
+    flex-grow: 1; /* Fill the remaining space*/
+    padding-left: 40px;
+    background-color: #ffffff;
+    overflow-y: auto;
+}
