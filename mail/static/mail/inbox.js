@@ -59,11 +59,11 @@ function view_email(id, mailbox){
       // How the archived stuff get done is controlled by the backend!
       emails_detail.innerHTML = `
       <ul class="list-group">
-        <li class="list-group-item"> <strong>From:</strong> ${email.sender}</li>
-        <li class="list-group-item"> <strong>To:</strong> ${email.recipients}</li>
-        <li class="list-group-item"> <strong>Subject:</strong> ${email.subject}</li>
-        <li class="list-group-item"> <strong>Timestamp:</strong> ${email.timestamp}</li>
-        <li class="list-group-item">${email.body}</li>
+        <p class="list-group-item"> <strong>From:</strong> ${email.sender}</br>
+        <strong>To:</strong> ${email.recipients}</br>
+        <strong>Subject:</strong> ${email.subject}</br>
+        <strong>Timestamp:</strong> ${email.timestamp}</p> </br>
+        <p class="list-group-item">${email.body}</p>
       </ul>
 
       <button class="${archive_class}" id="archive_btn" onclick="archive_email(${email.id}, ${email.archived});">${archive_value}</button>
@@ -180,9 +180,9 @@ function load_mailbox(mailbox) {
   });
 }
 
-function send_email(event){
+function send_email(){
 
-  event.preventDefault(); // prevent some auto-checking, cancel the default action
+  // event.preventDefault(); // prevent some auto-checking, cancel the default action
   console.log("test")
 
   // in chrome console, we can try to type document.querySelector("#compose-body").value; to check what is extracted
