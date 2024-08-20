@@ -56,7 +56,6 @@ function view_email(id, mailbox){
 
       const emails_detail = document.querySelector("#emails-detail");
 
-
       // pass email.archived instead of archive_value (which is for adjusting the button display only)
       // How the archived stuff get done is controlled by the backend!
       emails_detail.innerHTML = `
@@ -71,6 +70,12 @@ function view_email(id, mailbox){
       <button class="${archive_class}" id="archive_btn" onclick="archive_email(${email.id}, ${email.archived});">${archive_value}</button>
       <button class="btn btn-info" id="reply_btn" onclick="reply_email(${email.id});">Reply</button>
       `;
+
+      // Disable Archive button from emails in sent mailbox
+      // request.user.email cannot be accessed directly, so add an id for the tag
+      if (document.querySelector("#user_email").innerHTML === email.sender) {
+        document.querySelector("#archive_btn").remove();
+      }
 
       // change to read status
       if (mailbox === "inbox") {
@@ -120,77 +125,76 @@ function reply_email (id){
     const re = email.subject.slice(0, 2) === 'Re' ? '' : 'Re: ';
     document.querySelector('#compose-recipients').value = email.sender;
     document.querySelector('#compose-subject').value = re + email.subject;
-    document.querySelector('#compose-body').value = `On ${email.timestamp} ${email.sender} wrote: ${email.body}`;
+    document.querySelector('#compose-body').value = 
+    `
+    -----------------------------------
+    On ${email.timestamp} ${email.sender} wrote: ${email.body}
+    `;
   })
 
 }
 
 
 function load_mailbox(mailbox) {
-  
   // Show the mailbox and hide other views
-  document.querySelector('#emails-view').style.display = 'block';
-  document.querySelector('#emails-detail').style.display = 'none'; 
-  document.querySelector('#compose-view').style.display = 'none';
-
+  document.querySelector("#emails-view").style.display = "block";
+  document.querySelector("#emails-detail").style.display = "none";
+  document.querySelector("#compose-view").style.display = "none";
 
   // show the mailbox name:
-  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+  document.querySelector("#emails-view").innerHTML = `<h3>${
+    mailbox.charAt(0).toUpperCase() + mailbox.slice(1)
+  }</h3>`;
 
   // make a GET request to /emails/<mailbox> to request the emails
   fetch(`/emails/${mailbox}`) // The argument is going to be substituted in the path. Use backticks!
-  .then((response) => response.json())
-  .then((emails) => {
+    .then((response) => response.json())
+    .then((emails) => {
 
-    // Print emails in the console
-    if (emails.length === 0){
-      console.log(emails);
-      console.log("I am empty!");
-        div = document.createElement('div');
-        div.innerHTML = `${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)} is empty!`;
+      // Print emails in the console
+      if (emails.length === 0) {
+        console.log(emails);
+        console.log("I am empty!");
+        div = document.createElement("div");
+        div.innerHTML = `${
+          mailbox.charAt(0).toUpperCase() + mailbox.slice(1)
+        } is empty!`;
         div.className = "_div";
         document.querySelector("#emails-view").append(div);
-    } else {
+      } else {
+        // Loop through emails and create div for every email
+        emails.forEach((email) => {
+          console.log(email);
+          const newEmail = document.createElement("div");
 
-      // Loop through emails and create div for every email
-      emails.forEach(email => {
+          // innerHTML content
+          newEmail.innerHTML = `
+      <strong class="pr-2">${email.sender}</strong> ${email.subject} <span class="ml-auto">${email.timestamp}</span>
+    `;
 
-      console.log(email);
-      const newEmail = document.createElement("div");
+          // changing background color
 
-      // innerHTML content
-      newEmail.innerHTML = `
-        <strong class="pr-2">${email.sender}</strong> ${email.subject} <span class="ml-auto">${email.timestamp}</span>
-      `;
+          //newEmail.className = "list-group-item";
+          // 'read' is an name clash
+          newEmail.className = email.read ? "_read" : "_unread";
 
-      // changing background color
-      
-      //newEmail.className = "list-group-item"; 
-      // 'read' is an name clash
-      newEmail.className = email.read ? '_read': '_unread';
+          // Click event, will mark the email read
+          newEmail.addEventListener("click", function () {
+            view_email(email.id, mailbox);
+            // Select the emails-view and append the email
+          });
 
-      // Click event, will mark the email read 
-      newEmail.addEventListener("click", function(){
-        view_email(email.id, mailbox)
-      // Select the emails-view and append the email
-      
-      
-      });
+          document.querySelector("#emails-view").append(newEmail);
 
-
-      document.querySelector("#emails-view").append(newEmail);
-      
-      // // Show a message if the mailbox is empty
-      // if (emails.length === 0) {
-      //   div = document.createElement('div');
-      //   div.innerHTML = `${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)} is empty!`;
-      //   document.querySelector("#emails-view").append(div);
-      // }     
-    
-    }) }
-
-  });
-
+          // // Show a message if the mailbox is empty
+          // if (emails.length === 0) {
+          //   div = document.createElement('div');
+          //   div.innerHTML = `${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)} is empty!`;
+          //   document.querySelector("#emails-view").append(div);
+          // }
+        });
+      }
+    });
 }
 
 function send_email(){
