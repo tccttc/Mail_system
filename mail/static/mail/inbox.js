@@ -8,7 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#compose').addEventListener('click', compose_email);
 
   // Function for submission (Sending Emails)
-  document.querySelector("#compose-form").addEventListener('submit', send_email);
+  document.querySelector("#compose-form").addEventListener('submit', function(event){
+    event.preventDefault();
+    send_email();
+  });
 
   // By default, load the inbox
   load_mailbox('inbox');
@@ -29,22 +32,32 @@ function compose_email() {
 }
 
 
-function view_email(id){
+function view_email(id, mailbox){
+  // Show compose view and hide the emails-view and compose-view
+  document.querySelector("#emails-view").style.display = "none";
+  document.querySelector("#compose-view").style.display = "none";
+  if (document.querySelector("#emails-detail")) {
+    document.querySelector("#emails-detail").style.display = "block";
+  }
 
   // make a get request to the email
   fetch(`/emails/${id}`)
-  .then(response => response.json())
-  .then(email => {
+    .then((response) => response.json())
+    .then((email) => {
       // Print email
       console.log(email);
 
-      // ... do something else with email ...
-      // Show compose view and hide the emails-view and compose-view
-      document.querySelector('#emails-view').style.display = 'none';
-      document.querySelector('#compose-view').style.display = 'none';
-      document.querySelector('#emails-detail').style.display = 'block';
+      // If the email is not archived, show the button Archive
+      archive_value = !email.archived ? "Archive" : "Unarchive";
+      // different highlights for the button
+      archive_class = email.archived ? "btn btn-success" : "btn btn-danger";
 
-      document.querySelector("#emails-detail").innerHTML = `
+      const emails_detail = document.querySelector("#emails-detail");
+
+
+      // pass email.archived instead of archive_value (which is for adjusting the button display only)
+      // How the archived stuff get done is controlled by the backend!
+      emails_detail.innerHTML = `
       <ul class="list-group">
         <li class="list-group-item"> <strong>From:</strong> ${email.sender}</li>
         <li class="list-group-item"> <strong>To:</strong> ${email.recipients}</li>
@@ -52,71 +65,59 @@ function view_email(id){
         <li class="list-group-item"> <strong>Timestamp:</strong> ${email.timestamp}</li>
         <li class="list-group-item">${email.body}</li>
       </ul>
+
+      <button class="${archive_class}" id="archive_btn" onclick="archive_email(${email.id}, ${email.archived});">${archive_value}</button>
+      <button class="btn btn-info" id="reply_btn" onclick="reply_email(${email.id});">Reply</button>
       `;
 
-      //email.read = false;
-
       // change to read status
-      if(!email.read){
-        fetch(`/emails/${email.id}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-            read: true
-        })
-      })
-      }
-
-      // ------- Archiving / unarchiving email
-
-      const btn_arch = document.createElement('button');
-      btn_arch.innerHTML = email.archived ? "Unarchive" : "Archive";
-
-      // different highlights for the button
-      btn_arch.className = email.archived ? "btn btn-success" : "btn btn-danger"
-
-      // set archived = true
-      btn_arch.addEventListener("click", function () {
+      if (mailbox === "inbox") {
         fetch(`/emails/${email.id}`, {
           method: "PUT",
           body: JSON.stringify({
-            // (check later) load-mailbox will handle it
-            archived: !email.archived // The archive status should be changing
+            read: true,
           }),
-        })
-        // Check later... did you already put it into the archive page?
-        .then( () => load_mailbox('archive')) //redirect to the archived
+        });
+      }
+    });
+}
 
-        // show in archive panel
-        document.querySelector('#emails-detail').style.display = 'block';
-      }); 
-  
-      document.querySelector("#emails-detail").append(btn_arch);
+function archive_email(id, archived){
+
+  // ------- Archiving / unarchiving email
+
+  fetch(`/emails/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      archived: !archived // The archive status should be changing
+    }),
+  })
+  // Check later... did you already put it into the archive page?
+  .then( () => {
+
+    //load_mailbox('archive')
+    load_mailbox('inbox')
+
+  }) //redirect to the archived
+
+  // show in archive panel
+  // emails_detail.style.display = "block";
+}; 
 
 
+function reply_email (id){
 
-      // ----- Reply button
-      const btn_reply = document.createElement("button");
-      btn_reply.innerHTML = "Reply";
-      btn_reply.className = "btn btn-info";
-      btn_reply.addEventListener("click", function () {
-        console.log("Reply");
-        compose_email();
-        document.querySelector("#compose-recipients").value = email.sender;
+  // ----- Reply button
+  fetch(`/emails/${id}`)
+  .then(response => response.json())
+  .then(email => {  
+    compose_email();
 
-        // sometimes it would be reply for several times, so...
-        let subject = email.subject;
-        if ((subject.spilt(' ', 1))[0] != "Re"){
-          subject = "Re:" + email.subject;
-        }
-        document.querySelector("#compose-subject").value = subject;       
-
-        // On Jan 1 2020, 12:00 AM foo@example.com wrote:"
-        document.querySelector("#compose-body").value = `On ${email.timestamp} ${email.sender} wrote: ${email.body}`;
-
-      });
-      document.querySelector("#emails-detail").append(btn_reply);
-
-  });
+    const re = email.subject.slice(0, 2) === 'Re' ? '' : 'Re: ';
+    document.querySelector('#compose-recipients').value = email.sender;
+    document.querySelector('#compose-subject').value = re + email.subject;
+    document.querySelector('#compose-body').value = `On ${email.timestamp} ${email.sender} wrote: ${email.body}`;
+  })
 
 }
 
@@ -125,10 +126,11 @@ function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
-  document.querySelector('#emails-detail').style.display = 'block'; // it should shown in archived show
+  document.querySelector('#emails-detail').style.display = 'none'; 
   document.querySelector('#compose-view').style.display = 'none';
 
-  // Show the mailbox name
+
+  // show the mailbox name:
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
   // make a GET request to /emails/<mailbox> to request the emails
@@ -139,32 +141,39 @@ function load_mailbox(mailbox) {
     // Print emails in the console
     console.log(emails);
 
-    // Loop through emails and create div for every email
-    emails.forEach(singleEmail => {
+      // Loop through emails and create div for every email
+      emails.forEach(email => {
 
-      console.log(singleEmail);
+      console.log(email);
       const newEmail = document.createElement("div");
 
       // innerHTML content
       newEmail.innerHTML = `
-        <h6>Sender: ${singleEmail.sender}</h6>
-        <h5>Subject: ${singleEmail.subject}</h5>
-        <p>${singleEmail.timestamp}</p>
+        <strong class="pr-2">${email.sender}</strong> ${email.subject} <span class="ml-auto">${email.timestamp}</span>
       `;
 
       // changing background color
       
       //newEmail.className = "list-group-item"; 
       // 'read' is an name clash
-      newEmail.className = singleEmail.read ? '_read': '_unread';
+      newEmail.className = email.read ? '_read': '_unread';
 
       // Click event, will mark the email read 
       newEmail.addEventListener("click", function(){
-        view_email(singleEmail.id)
+        view_email(email.id, mailbox)
       });
 
       // Select the emails-view and append the email
       document.querySelector("#emails-view").append(newEmail);
+      
+      // Show a message if the mailbox is empty
+      if (emails.length === 0) {
+      div = document.createElement('div');
+      div.innerHTML = `${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)} is empty!`;
+      div.classList.add('border', 'p-2', 'text-center', 'bg-light');
+      emails_div.append(div);
+      document.querySelector("#emails-view").append(newEmail);
+    }
 
     })
 
@@ -178,18 +187,14 @@ function send_email(event){
 
   // in chrome console, we can try to type document.querySelector("#compose-body").value; to check what is extracted
 
-  // Retrieve the fields and the emails
-  const recipients = document.querySelector("#compose-recipients").value;
-  const subject = document.querySelector("#compose-subject").value;
-  const body = document.querySelector("#compose-body").value;
-
   // fetching the message
   fetch("/emails", {
     method: "POST",
     body: JSON.stringify({
-      recipients: recipients,
-      subject: subject,
-      body: body
+        // Retrieve the fields and the emails using query selector
+      recipients: document.querySelector("#compose-recipients").value,
+      subject: document.querySelector("#compose-subject").value,
+      body: document.querySelector("#compose-body").value
     })
   })
   .then(response => response.json())
@@ -199,5 +204,3 @@ function send_email(event){
     load_mailbox('sent'); // redirect the page to load_mailbox
   });
 }
-
-
