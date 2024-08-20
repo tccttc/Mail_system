@@ -1,3 +1,11 @@
+html, body {
+    margin: 0;
+}
+.container {
+    /* found from the debugger */
+    margin: 0;
+    padding-left: 0;
+}
 
 textarea {
     min-height: 400px;
@@ -94,6 +102,8 @@ p {
     }
 }
 
+
+
 /* CSS part of inbox.html */
 
 #inbox_body{
@@ -102,18 +112,38 @@ p {
     font-family: Arial, sans-serif;
 }
 
+#top_heading{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-family: Georgia;
+    text-align: center;
+    font-weight: bold;
+}
+
 #github {
     height: 70%;
     width: 70%;
 }
 
+h3 {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#user_email{
+    font-size: 15px;
+    text-align: center;
+    word-wrap: break-word; /* Alternatively, you can use this */
+}
+
 .sidebar {
     width: 150px;
-    background-color: #f4f4f4;
+    background-color: #cebde2;
     margin: 0;
     padding: 15px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: 80vh; /* Full height */
+    height: 100vh; /* Full height */
     
 }
 
@@ -136,5 +166,4 @@ p {
     flex-grow: 1; /* Fill the remaining space*/
     padding-left: 40px;
     background-color: #ffffff;
-    overflow-y: auto;
 }
