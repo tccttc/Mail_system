@@ -1,3 +1,4 @@
+
 textarea {
     min-height: 400px;
 }
@@ -12,6 +13,12 @@ textarea {
     border: 3px solid #cdcdcd;
 }
 
+p {
+    white-space: pre-line;
+}
+
+
+/* CSS part of login.html */
 ._div {
     height: 8vh;
     color: #6a6a6a;
@@ -26,9 +33,6 @@ textarea {
 
 }
 
-p {
-    white-space: pre-line;
-}
 
 #body_id {
     background-image: url("imgs/sky_star.jpg");
@@ -50,7 +54,7 @@ p {
 }
 
 
-#_div {
+#login_div {
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
@@ -90,18 +94,27 @@ p {
     }
 }
 
+/* CSS part of inbox.html */
+
 #inbox_body{
     display: flex;
     margin: 0;
     font-family: Arial, sans-serif;
 }
 
+#github {
+    height: 70%;
+    width: 70%;
+}
+
 .sidebar {
     width: 150px;
     background-color: #f4f4f4;
+    margin: 0;
     padding: 15px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: 100vh; /* Full height */
+    height: 80vh; /* Full height */
+    
 }
 
 .sidebar button, .sidebar a{
