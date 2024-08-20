@@ -3,11 +3,25 @@ textarea {
 }
 
 ._read {
-    background-color: #dadada;
+    background-color: #ececec;
     border: 3px solid #cdcdcd;
 }
 
 ._unread {
     background-color: white;
     border: 3px solid #cdcdcd;
+}
+
+._div {
+    height: 8vh;
+    color: #6a6a6a;
+    font-family: Arial;
+    background-color: #ececec;
+    border: 3px solid #cdcdcd;
+
+    /* Vertically and horizontally centered */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }

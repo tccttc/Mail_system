@@ -40,6 +40,8 @@ function view_email(id, mailbox){
     document.querySelector("#emails-detail").style.display = "block";
   }
 
+  console.log("I am viewing email!")
+
   // make a get request to the email
   fetch(`/emails/${id}`)
     .then((response) => response.json())
@@ -85,6 +87,8 @@ function view_email(id, mailbox){
 function archive_email(id, archived){
 
   // ------- Archiving / unarchiving email
+
+  console.log("I am archiving/unarchiving email!")
 
   fetch(`/emails/${id}`, {
     method: "PUT",
@@ -139,7 +143,14 @@ function load_mailbox(mailbox) {
   .then((emails) => {
 
     // Print emails in the console
-    console.log(emails);
+    if (emails.length === 0){
+      console.log(emails);
+      console.log("I am empty!");
+        div = document.createElement('div');
+        div.innerHTML = `${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)} is empty!`;
+        div.className = "_div";
+        document.querySelector("#emails-view").append(div);
+    } else {
 
       // Loop through emails and create div for every email
       emails.forEach(email => {
@@ -161,23 +172,25 @@ function load_mailbox(mailbox) {
       // Click event, will mark the email read 
       newEmail.addEventListener("click", function(){
         view_email(email.id, mailbox)
+      // Select the emails-view and append the email
+      
+      
       });
 
-      // Select the emails-view and append the email
+
       document.querySelector("#emails-view").append(newEmail);
       
-      // Show a message if the mailbox is empty
-      if (emails.length === 0) {
-      div = document.createElement('div');
-      div.innerHTML = `${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)} is empty!`;
-      div.classList.add('border', 'p-2', 'text-center', 'bg-light');
-      emails_div.append(div);
-      document.querySelector("#emails-view").append(newEmail);
-    }
-
-    })
+      // // Show a message if the mailbox is empty
+      // if (emails.length === 0) {
+      //   div = document.createElement('div');
+      //   div.innerHTML = `${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)} is empty!`;
+      //   document.querySelector("#emails-view").append(div);
+      // }     
+    
+    }) }
 
   });
+
 }
 
 function send_email(){
