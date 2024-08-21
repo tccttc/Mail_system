@@ -1,4 +1,21 @@
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
+
+  // Nav should be initialized (and it runs) only when the DOM is loaded
+  let nav = document.querySelector(".nav");
+  let link = document.querySelectorAll(".link");
+
+  link.forEach(function(button){
+      button.addEventListener("click", function(){
+        console.log("The button listener is activated!")
+        nav.querySelector(".active").classList.remove("active");
+        button.classList.add("active");
+    })
+});
 
   // The id are in inbox.html
   // Use buttons to toggle between views
@@ -6,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
+
+    
+
 
   // Function for submission (Sending Emails)
   document.querySelector("#compose-form").addEventListener('submit', function(event){

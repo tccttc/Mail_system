@@ -55,16 +55,18 @@ p {
     z-index: 1;
 }
 
+/* The white mask */
 #body_id::before {
     content: '';
     position: absolute;
     top: 25%;
     left: 33%; 
-    height: 50%;
-    width : 35%;
+    height: 45%;
+    width : 32%;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.7); /* White mask with 70% opacity */
     z-index: -1; /* Ensure the mask is above the background image */
+
 }
 
 /*
@@ -189,4 +191,12 @@ h3 {
     flex-grow: 1; /* Fill the remaining space*/
     padding-left: 40px;
     background-color: #ffffff;
+}
+
+.nav-item {
+    border-radius: 10px;
+}
+
+.nav-item.active{
+    background-color: #a000c8;
 }

@@ -8,12 +8,17 @@
     <div class="sidebar white">
         <p id="top_heading">Mail System</p>
         <hr> 
-        <button class="nav-item white" id="inbox">Inbox</button>
-        <button class="nav-item white" id="compose">Compose</button>
-        <button class="nav-item white" id="sent">Sent</button>
-        <button class="nav-item white" id="archived">Archived</button>
+
+        <!-- active button effect -->
+        <ul class="nav">
+            <button class="nav-item link active white" id="inbox">Inbox</button>
+            <button class="nav-item link white" id="compose">Compose</button>
+            <button class="nav-item link white" id="sent">Sent</button>
+            <button class="nav-item link white" id="archived">Archived</button>
+        </ul>
+
         <a class="nav-item white" href="{% url 'logout' %}">Log Out</a>
-        <a href="https://github.com/tccttc">
+        <a class="nav-item" href="https://github.com/tccttc">
             <img id="github" src="{% static 'mail/imgs/Github_logo_inverted.png' %}">
         </a>
     </br>
