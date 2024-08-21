@@ -9,11 +9,11 @@ You can check your current version using the command `python --version` and `pyt
 
 Then clone the repository:
 ```
-git clone <link>
-cd mail
+git clone https://github.com/tccttc/Mail_system.git
 ```
+and open the folder.
 
-Perform migration:
+You will need to perform migration first:
 ```
 python manage.py makemigrations mail
 python manage.py migrate
