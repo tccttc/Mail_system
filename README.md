@@ -2,7 +2,7 @@ This is the improved version of Harvard's CS50w assignment Project3, with a mail
 
 If you want to have a try, please DO NOT use a real email address in registration, as it is an isolated email system with all the data stored in a sqlite database.
 
-**Demostration video**: https://youtu.be/5Eek-mgpYAA
+**Demostration video** (without Audio): https://youtu.be/5Eek-mgpYAA
 
 # Settings
 
