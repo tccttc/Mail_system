@@ -26,6 +26,11 @@ p {
 }
 
 
+
+.emails-detail-grp{
+    line-height: 1.3;
+}
+
 /* CSS part of login.html */
 ._div {
     height: 8vh;

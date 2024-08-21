@@ -79,11 +79,12 @@ function view_email(id, mailbox){
       // pass email.archived instead of archive_value (which is for adjusting the button display only)
       // How the archived stuff get done is controlled by the backend!
       emails_detail.innerHTML = `
-      <ul class="list-group">
-        <p class="list-group-item"> <strong>From:</strong> ${email.sender}</br>
-        <strong>To:</strong> ${email.recipients}</br>
-        <strong>Subject:</strong> ${email.subject}</br>
-        <strong>Timestamp:</strong> ${email.timestamp}</p> </br>
+      <ul class="list-group email-detail-grp">
+        <h3>Email detail</h3>
+        <p class="list-group-item"> <strong>From:</strong> ${email.sender}
+        <strong>To:</strong> ${email.recipients}
+        <strong>Subject:</strong> ${email.subject}
+        <strong>Timestamp:</strong> ${email.timestamp}</p></br>
         <p class="list-group-item">${email.body}</p>
       </ul>
 
