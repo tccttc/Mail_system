@@ -6,7 +6,8 @@
 <div id="inbox_body">
 
     <div class="sidebar">
-        <p id="top_heading">Mail System</p> 
+        <p class="white" id="top_heading">Mail System</p>
+        <hr> 
         <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
         <button class="btn btn-sm btn-outline-primary" id="compose">Compose</button>
         <button class="btn btn-sm btn-outline-primary" id="sent">Sent</button>
@@ -15,7 +16,7 @@
         <a href="https://github.com/tccttc">
             <img id="github" src="{% static 'mail/imgs/Github_logo.png' %}">
         </a>
-        <p id="user_email">{{ request.user.email }}</p>
+        <p class="white" id="user_email">{{ request.user.email }}</p>
     </div>
 
 
